@@ -10,4 +10,6 @@ add_executable(untitled main.cpp
         FileHandler.cpp
         FileHandler.h
         KeyInput.cpp
-        KeyInput.h)
+        KeyInput.h
+        UserInterface.cpp
+        UserInterface.h)

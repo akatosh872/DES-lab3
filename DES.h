@@ -1,6 +1,7 @@
 #include <cstdint>
 #include "MatrixConst.h"
 #include <iostream>
+#include "FileHandler.h"
 
 #ifndef UNTITLED_DES_H
 #define UNTITLED_DES_H
@@ -9,7 +10,9 @@
 
 class DES {
 public:
-    void des_encrypt(uint8_t *to, uint8_t mode, size_t length, uint8_t *from, uint64_t key64b);
+    void des_encrypt(FileHandler& fh, uint8_t mode, uint64_t key64b);
+
+    void des_encrypt_block(uint8_t *to, uint8_t mode, size_t length, uint8_t *from, uint64_t key64b);
 
     void key_expansion(uint64_t key64b, uint64_t *keys48b);
 

@@ -1,30 +1,42 @@
 #include "DES.h"
-
-    void DES::des_encrypt(uint8_t *to, uint8_t mode, size_t length, uint8_t *from, uint64_t key64b) {
-        length = length % 8 == 0 ? length : length + (8 - (length % 8));
-
-        uint64_t keys48b[16] = {0};
-        uint32_t N1, N2;
-
-        key_expansion(key64b, keys48b);
+const size_t FILE_CHUNK_SIZE = 131072;
 
 
-        for (size_t i = 0; i < length; i += 8) {
-            split_64bits_to_32bits(
-                    initial_permutation(
-                            join_8bits_to_64bits(from + i)
-                    ),
-                    &N1, &N2
-            );
-            feistel_cipher(mode, &N1, &N2, keys48b);
-            split_64bits_to_8bits(
-                    final_permutation(
-                            join_32bits_to_64bits(N2, N1)
-                    ),
-                    (to + i)
-            );
-        }
+void DES::des_encrypt(FileHandler& fh, uint8_t mode, uint64_t key64b) {
+    uint8_t buffer[FILE_CHUNK_SIZE];
+    uint8_t crypted[FILE_CHUNK_SIZE];
+    size_t bytesRead;
+
+    while (fh.readChunk(buffer, FILE_CHUNK_SIZE, bytesRead)) {
+        des_encrypt_block(crypted, mode, bytesRead, buffer, key64b);
+        fh.writeChunk(crypted, bytesRead);
     }
+}
+
+void DES::des_encrypt_block(uint8_t *to, uint8_t mode, size_t length, uint8_t *from, uint64_t key64b) {
+    length = length % 8 == 0 ? length : length + (8 - (length % 8));
+
+    uint64_t keys48b[16] = {0};
+    uint32_t N1, N2;
+
+    key_expansion(key64b, keys48b);
+
+    for (size_t i = 0; i < length; i += 8) {
+        split_64bits_to_32bits(
+                initial_permutation(
+                        join_8bits_to_64bits(from + i)
+                ),
+                &N1, &N2
+        );
+        feistel_cipher(mode, &N1, &N2, keys48b);
+        split_64bits_to_8bits(
+                final_permutation(
+                        join_32bits_to_64bits(N2, N1)
+                ),
+                (to + i)
+        );
+    }
+}
 
     void DES::key_expansion(uint64_t key64b, uint64_t *keys48b) {
         uint32_t K1 = 0, K2 = 0;

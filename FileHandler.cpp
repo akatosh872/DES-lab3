@@ -29,9 +29,10 @@ size_t FileHandler::getBytesRead() {
     return fileInput.gcount();
 }
 
-bool FileHandler::readChunk(uint8_t *buffer, size_t chunkSize) {
+bool FileHandler::readChunk(uint8_t *buffer, size_t chunkSize, size_t& bytesRead) {
     fileInput.read(reinterpret_cast<char *>(buffer), chunkSize);
-    return !fileInput.eof();
+    bytesRead = fileInput.gcount();
+    return bytesRead > 0;
 }
 
 void FileHandler::writeChunk(const uint8_t *buffer, size_t chunkSize) {
