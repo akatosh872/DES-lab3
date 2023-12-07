@@ -1,18 +1,23 @@
+#ifndef UNTITLED_DES_H
+#define UNTITLED_DES_H
+
 #include <cstdint>
 #include "MatrixConst.h"
 #include <iostream>
 #include "FileHandler.h"
 
-#ifndef UNTITLED_DES_H
-#define UNTITLED_DES_H
-
 #define LSHIFT_28BIT(x, L) ((((x) << (L)) | ((x) >> (-(L) & 27))) & (((uint64_t)1 << 32) - 1))
+
+enum DesMode {
+    DES_ONE = 1,
+    DES_EEE,
+    DES_EDE
+};
 
 class DES {
 public:
-    void des_encrypt(FileHandler& fh, uint8_t mode, uint64_t key64b);
 
-    void des_encrypt_block(uint8_t *to, uint8_t mode, size_t length, uint8_t *from, uint64_t key64b);
+    void des_encrypt_block(uint8_t *to, bool mode, size_t length, uint8_t *from, uint64_t key64b);
 
     void key_expansion(uint64_t key64b, uint64_t *keys48b);
 
@@ -55,7 +60,7 @@ public:
  *  Метод отримує режим (кодування або декодування), та 16 раундів повторює функцію
  */
 
-    void feistel_cipher(uint8_t mode, uint32_t *N1, uint32_t *N2, uint64_t *keys48b);
+    void feistel_cipher(bool mode, uint32_t *N1, uint32_t *N2, uint64_t *keys48b);
 
 /**
  *  Метод викликає функцію кодування та змінює дві частини до наступного раунду

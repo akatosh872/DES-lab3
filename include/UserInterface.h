@@ -1,10 +1,11 @@
-#include <Windows.h>
+#include <windows.h>
 #include <commdlg.h>
 #include <iostream>
 #include <cstdio>
 #include <tchar.h>
 #include <conio.h>
 #include <cstdint>
+#include "DES.h"
 
 #ifndef UNTITLED_USERINTERFACE_H
 #define UNTITLED_USERINTERFACE_H
@@ -26,18 +27,21 @@ public:
 
     inline void DelChar();
 
-    bool EnterPasswordHex(const TCHAR* Prompt, uint64_t& Res, unsigned PasswordLen);
+    bool EnterPasswordHex(uint64_t& key);
 
     void getFileSelection();
 
-    char getMode() const;
+    char getCrypt() const;
+
+    DesMode getDES() const;
 
 private:
     OPENFILENAME input_file{};
     OPENFILENAME out_file{};
     char szFileNameInput[MAX_PATH] = "";
     char szFileNameOutput[MAX_PATH] = "";
-    char mode{};
+    char crypt_mode{};
+    int des_mode{};
 };
 
 

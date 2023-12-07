@@ -1,4 +1,4 @@
-#include "FileHandler.h"
+#include "../include/FileHandler.h"
 
 const char *inputFileName;
 const char *outputFileName;

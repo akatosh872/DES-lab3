@@ -4,12 +4,12 @@ project(untitled)
 set(CMAKE_CXX_STANDARD 14)
 
 add_executable(untitled main.cpp
-        DES.cpp
-        DES.h
-        MatrixConst.h
-        FileHandler.cpp
-        FileHandler.h
-        KeyInput.cpp
-        KeyInput.h
-        UserInterface.cpp
-        UserInterface.h)
+        source/DES.cpp
+        include/DES.h
+        include/MatrixConst.h
+        source/FileHandler.cpp
+        include/FileHandler.h
+        source/UserInterface.cpp
+        include/UserInterface.h
+        source/DesEncryptor.cpp
+        include/DesEncryptor.h)
