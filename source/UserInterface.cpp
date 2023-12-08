@@ -30,11 +30,9 @@ void UserInterface::initializeFileSelection(OPENFILENAME& file, const char* filt
 }
 
 void UserInterface::getFileSelection() {
-    // Выбор файла для обработки
     MessageBox(NULL, "Select the file you want to encrypt/decrypt", "Attention", MB_ICONEXCLAMATION);
     GetOpenFileName(&input_file);
 
-    // Выбор файла для сохранения результата
     MessageBox(NULL, "Select the file where to save", "Attention", MB_ICONEXCLAMATION);
     GetSaveFileName(&out_file);
 }

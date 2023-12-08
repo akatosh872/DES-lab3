@@ -5,6 +5,12 @@
 #include "../include/DES.h"
 #include "FileHandler.h"
 
+enum DesMode {
+    DES_ONE,
+    DES_EEE,
+    DES_EDE
+};
+
 class DesEncryptor
 {
 private:

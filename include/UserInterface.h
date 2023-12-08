@@ -5,7 +5,7 @@
 #include <tchar.h>
 #include <conio.h>
 #include <cstdint>
-#include "DES.h"
+#include "DesEncryptor.h"
 
 #ifndef UNTITLED_USERINTERFACE_H
 #define UNTITLED_USERINTERFACE_H

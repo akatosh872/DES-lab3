@@ -15,29 +15,29 @@ int main() {
     UserInterface userInterface;
     userInterface.getFileSelection();
 
-    printf("Enter password 1: ");
+    printf("Enter password: ");
     userInterface.EnterPasswordHex(key1);
 
     if (userInterface.getDES() != DesMode::DES_ONE) {
         printf("Enter password 2: ");
         userInterface.EnterPasswordHex(key2);
-        printf("Enter password 2: ");
+        printf("Enter password 3: ");
         userInterface.EnterPasswordHex(key3);
     }
 
     FileHandler fh(userInterface.getInputFileName(), userInterface.getOutputFileName());
-    DesEncryptor des{};
-    crypt_mode = userInterface.getCrypt();
+    crypt_mode = userInterface.getCrypt() == 'E';
     des_mode = userInterface.getDES();
+    DesEncryptor des{};
 
     if (fh.openInputFile() && fh.openOutputFile()) {
 
         auto start_time = chrono::high_resolution_clock::now();
-        des.encrypt(fh, (crypt_mode == 'E'), des_mode, key1, key2, key3);
+        des.encrypt(fh, crypt_mode, des_mode, key1, key2, key3);
         auto end_time = chrono::high_resolution_clock::now();
 
         chrono::duration<double> elapsed_time = end_time - start_time;
-        cout << "Execution time: " << elapsed_time.count() << " seconds" << endl;
+        printf("Execution time: %f seconds\n", elapsed_time.count());
 
         fh.closeInputFile();
         fh.closeOutputFile();

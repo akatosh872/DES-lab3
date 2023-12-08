@@ -24,12 +24,12 @@ void DesEncryptor::encrypt_chunk(bool mode, DesMode des_mode, size_t bytes, uint
         case DES_ONE:
             break;
         case DES_EEE:
-            des.des_encrypt_block(crypted, mode, bytes, buffer, key2);
-            des.des_encrypt_block(crypted, mode, bytes, buffer, key3);
+            des.des_encrypt_block(crypted, mode, bytes, crypted, key2);
+            des.des_encrypt_block(crypted, mode, bytes, crypted, key3);
             break;
         case DES_EDE:
-            des.des_encrypt_block(crypted, !mode, bytes, buffer, key2);
-            des.des_encrypt_block(crypted, mode, bytes, buffer, key3);
+            des.des_encrypt_block(crypted, !mode, bytes, crypted, key2);
+            des.des_encrypt_block(crypted, mode, bytes, crypted, key3);
             break;
     }
 }

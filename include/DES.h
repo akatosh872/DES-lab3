@@ -8,12 +8,6 @@
 
 #define LSHIFT_28BIT(x, L) ((((x) << (L)) | ((x) >> (-(L) & 27))) & (((uint64_t)1 << 32) - 1))
 
-enum DesMode {
-    DES_ONE = 1,
-    DES_EEE,
-    DES_EDE
-};
-
 class DES {
 public:
 
