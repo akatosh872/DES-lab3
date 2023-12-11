@@ -1,3 +1,6 @@
+#ifndef UNTITLED_USERINTERFACE_H
+#define UNTITLED_USERINTERFACE_H
+
 #include <windows.h>
 #include <commdlg.h>
 #include <iostream>
@@ -7,9 +10,6 @@
 #include <cstdint>
 #include "DesEncryptor.h"
 
-#ifndef UNTITLED_USERINTERFACE_H
-#define UNTITLED_USERINTERFACE_H
-
 #define BACK_SPACE	8
 #define DELTA_HEX	7
 #define BASE		16
@@ -18,21 +18,16 @@
 class UserInterface {
 public:
     UserInterface();
-
     void initializeFileSelection(OPENFILENAME& file, const char* filter, char* fileName);
-
     const char* getInputFileName() const;
-
     const char* getOutputFileName() const;
-
     inline void DelChar();
-
     bool EnterPasswordHex(uint64_t& key);
-
-    void getFileSelection();
-
+    void InitializeDesKeys(uint64_t& key1, uint64_t& key2, uint64_t& key3);
+    void requestKey(std::string keyMessage, uint64_t &key);
+    bool isWeakKey(uint64_t key);
+    bool EnterIVHex(uint64_t& iv);
     char getCrypt() const;
-
     DesMode getDES() const;
 
 private:

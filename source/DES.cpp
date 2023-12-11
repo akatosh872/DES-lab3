@@ -2,28 +2,27 @@
 
 const size_t FILE_CHUNK_SIZE = 131072;
 
-void DES::des_encrypt_block(uint8_t *to, bool mode, size_t length, uint8_t *from, uint64_t key64b) {
-    length = length % 8 == 0 ? length : length + (8 - (length % 8));
-
+void DES::des_encrypt_block(uint8_t *to, bool mode, size_t length, uint8_t *from, uint64_t key64b, uint64_t iv = 0) {
+    length = (length % 8 == 0 ? length : length + (8 - (length % 8)));
     uint64_t keys48b[16] = {0};
-    uint32_t N1, N2;
+    uint64_t previous_block = iv; // Initialize with the IV for CBC mode
 
     key_expansion(key64b, keys48b);
 
     for (size_t i = 0; i < length; i += 8) {
-        split_64bits_to_32bits(
-                initial_permutation(
-                        join_8bits_to_64bits(from + i)
-                ),
-                &N1, &N2
-        );
+        uint64_t block64b = join_8bits_to_64bits(from + i);
+
+        // XOR with the previous block in CBC mode
+        if (iv != 0) {
+            block64b ^= previous_block;
+        }
+
+        uint32_t N1, N2;
+        split_64bits_to_32bits(initial_permutation(block64b), &N1, &N2);
         feistel_cipher(mode, &N1, &N2, keys48b);
-        split_64bits_to_8bits(
-                final_permutation(
-                        join_32bits_to_64bits(N2, N1)
-                ),
-                (to + i)
-        );
+        previous_block = final_permutation(join_32bits_to_64bits(N2, N1));
+
+        split_64bits_to_8bits(previous_block, (to + i));
     }
 }
 
@@ -33,9 +32,6 @@ void DES::key_expansion(uint64_t key64b, uint64_t *keys48b) {
     key_expansion_to_48bits(K1, K2, keys48b);
 }
 
-/**
-*    Об'єднує масив з 8 байтів у 64-бітне ціле число
-*/
 uint64_t DES::join_8bits_to_64bits(uint8_t *blocks8b) {
     uint64_t block64b;
     for (uint8_t *p = blocks8b; p < blocks8b + 8; ++p) {

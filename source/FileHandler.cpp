@@ -1,10 +1,5 @@
 #include "../include/FileHandler.h"
 
-const char *inputFileName;
-const char *outputFileName;
-std::ifstream fileInput;
-std::ofstream fileOutput;
-
 FileHandler::FileHandler(const char *inputFileName, const char *outputFileName) : inputFileName(inputFileName), outputFileName(outputFileName) {}
 
 bool FileHandler::openInputFile() {

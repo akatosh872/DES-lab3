@@ -1,29 +1,20 @@
+#include <windows.h>
 #include <iostream>
-#include <chrono>
 #include "include/DES.h"
 #include "include/DesEncryptor.h"
 #include "include/FileHandler.h"
 #include "include/UserInterface.h"
 
-using namespace std;
 
 int main() {
-    uint64_t key1, key2, key3;
+    uint64_t key1, key2, key3, iv = 0;
     char crypt_mode;
     DesMode des_mode;
 
     UserInterface userInterface;
-    userInterface.getFileSelection();
 
-    printf("Enter password: ");
-    userInterface.EnterPasswordHex(key1);
-
-    if (userInterface.getDES() != DesMode::DES_ONE) {
-        printf("Enter password 2: ");
-        userInterface.EnterPasswordHex(key2);
-        printf("Enter password 3: ");
-        userInterface.EnterPasswordHex(key3);
-    }
+    userInterface.InitializeDesKeys(key1, key2, key3);
+    userInterface.EnterIVHex(iv);
 
     FileHandler fh(userInterface.getInputFileName(), userInterface.getOutputFileName());
     crypt_mode = userInterface.getCrypt() == 'E';
@@ -32,12 +23,12 @@ int main() {
 
     if (fh.openInputFile() && fh.openOutputFile()) {
 
-        auto start_time = chrono::high_resolution_clock::now();
-        des.encrypt(fh, crypt_mode, des_mode, key1, key2, key3);
-        auto end_time = chrono::high_resolution_clock::now();
+        DWORD start_time = GetTickCount();
+        des.encrypt(fh, crypt_mode, des_mode, iv, key1, key2, key3);
+        DWORD end_time = GetTickCount();
 
-        chrono::duration<double> elapsed_time = end_time - start_time;
-        printf("Execution time: %f seconds\n", elapsed_time.count());
+        DWORD elapsed_time = end_time - start_time;
+        printf("Execution time: %.3f seconds\n", elapsed_time / 1000.0);
 
         fh.closeInputFile();
         fh.closeOutputFile();
