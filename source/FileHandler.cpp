@@ -20,10 +20,6 @@ void FileHandler::closeOutputFile() {
     fileOutput.close();
 }
 
-size_t FileHandler::getBytesRead() {
-    return fileInput.gcount();
-}
-
 bool FileHandler::readChunk(uint8_t *buffer, size_t chunkSize, size_t& bytesRead) {
     fileInput.read(reinterpret_cast<char *>(buffer), chunkSize);
     bytesRead = fileInput.gcount();

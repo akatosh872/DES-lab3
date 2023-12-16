@@ -1,5 +1,5 @@
-#ifndef UNTITLED_USERINTERFACE_H
-#define UNTITLED_USERINTERFACE_H
+#ifndef UNTITLED_INPUTHANDLER_H
+#define UNTITLED_INPUTHANDLER_H
 
 #include <windows.h>
 #include <commdlg.h>
@@ -10,35 +10,31 @@
 #include <cstdint>
 #include "DesEncryptor.h"
 
-#define BACK_SPACE	8
-#define DELTA_HEX	7
-#define BASE		16
-#define ENTER		13
 
-class UserInterface {
+class InputHandler {
 public:
-    UserInterface();
+    InputHandler();
+    void setCryptMode();
     void initializeFileSelection(OPENFILENAME& file, const char* filter, char* fileName);
     const char* getInputFileName() const;
     const char* getOutputFileName() const;
-    inline void DelChar();
+    inline void delChar();
     bool EnterPasswordHex(uint64_t& key);
-    void InitializeDesKeys(uint64_t& key1, uint64_t& key2, uint64_t& key3);
-    void requestKey(std::string keyMessage, uint64_t &key);
-    bool isWeakKey(uint64_t key);
-    bool EnterIVHex(uint64_t& iv);
-    char getCrypt() const;
-    DesMode getDES() const;
+    bool enterIVHex(uint64_t& iv);
 
+    char crypt_mode{};
 private:
     OPENFILENAME input_file{};
     OPENFILENAME out_file{};
     char szFileNameInput[MAX_PATH] = "";
     char szFileNameOutput[MAX_PATH] = "";
-    char crypt_mode{};
-    int des_mode{};
+
+    static const char BACK_SPACE = 8;
+    static const char DELTA_HEX = 7;
+    static const char BASE = 16;
+    static const char ENTER = 13;
 };
 
 
 
-#endif //UNTITLED_USERINTERFACE_H
+#endif //UNTITLED_INPUTHANDLER_H

@@ -5,7 +5,7 @@ const size_t FILE_CHUNK_SIZE = 131072;
 void DES::des_encrypt_block(uint8_t *to, bool mode, size_t length, uint8_t *from, uint64_t key64b, uint64_t iv = 0) {
     length = (length % 8 == 0 ? length : length + (8 - (length % 8)));
     uint64_t keys48b[16] = {0};
-    uint64_t previous_block = iv; // Initialize with the IV for CBC mode
+    uint64_t previous_block = iv;
 
     key_expansion(key64b, keys48b);
 
@@ -33,9 +33,9 @@ void DES::key_expansion(uint64_t key64b, uint64_t *keys48b) {
 }
 
 uint64_t DES::join_8bits_to_64bits(uint8_t *blocks8b) {
-    uint64_t block64b;
-    for (uint8_t *p = blocks8b; p < blocks8b + 8; ++p) {
-        block64b = (block64b << 8) | *p;
+    uint64_t block64b = 0;
+    for (int i = 0; i < 8; ++i) {
+        block64b = (block64b << 8) | blocks8b[i];
     }
     return block64b;
 }

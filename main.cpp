@@ -1,24 +1,25 @@
 #include <windows.h>
 #include <iostream>
-#include "include/DES.h"
 #include "include/DesEncryptor.h"
 #include "include/FileHandler.h"
-#include "include/UserInterface.h"
+#include "include/DESInputHandler.h"
 
 
 int main() {
     uint64_t key1, key2, key3, iv = 0;
-    char crypt_mode;
+    bool crypt_mode;
     DesMode des_mode;
 
-    UserInterface userInterface;
+    DESInputHandler inputHandler;
 
-    userInterface.InitializeDesKeys(key1, key2, key3);
-    userInterface.EnterIVHex(iv);
+    inputHandler.setDesMode();
+    inputHandler.setCryptMode();
+    inputHandler.initializeDesKeys(key1, key2, key3);
+    inputHandler.enterIVHex(iv);
 
-    FileHandler fh(userInterface.getInputFileName(), userInterface.getOutputFileName());
-    crypt_mode = userInterface.getCrypt() == 'E';
-    des_mode = userInterface.getDES();
+    FileHandler fh(inputHandler.getInputFileName(), inputHandler.getOutputFileName());
+    crypt_mode = inputHandler.getCrypt();
+    des_mode = inputHandler.getDES();
     DesEncryptor des{};
 
     if (fh.openInputFile() && fh.openOutputFile()) {

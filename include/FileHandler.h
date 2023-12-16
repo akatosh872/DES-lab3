@@ -8,19 +8,11 @@
 class FileHandler {
 public:
     FileHandler(const char* inputFileName, const char* outputFileName);
-
     bool openInputFile();
-
     bool openOutputFile();
-
     void closeInputFile();
-
     void closeOutputFile();
-
-    size_t getBytesRead();
-
     bool readChunk(uint8_t* buffer, size_t chunkSize, size_t& bytesRead);
-
     void writeChunk(const uint8_t* buffer, size_t chunkSize);
 
 private:

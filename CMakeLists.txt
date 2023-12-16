@@ -9,7 +9,9 @@ add_executable(untitled main.cpp
         include/MatrixConst.h
         source/FileHandler.cpp
         include/FileHandler.h
-        source/UserInterface.cpp
-        include/UserInterface.h
+        source/InputHandler.cpp
+        include/InputHandler.h
         source/DesEncryptor.cpp
-        include/DesEncryptor.h)
+        include/DesEncryptor.h
+        source/DESInputHandler.cpp
+        include/DESInputHandler.h)
