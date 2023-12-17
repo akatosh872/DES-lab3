@@ -10,7 +10,7 @@ void DESInputHandler::setDesMode()
     } while (des_mode < 1 || des_mode > 3);
 }
 
-void DESInputHandler::initializeDesKeys(uint64_t &key1, uint64_t &key2, uint64_t &key3) {
+void DESInputHandler::initializeDesKeys(unsigned long long &key1, unsigned long long &key2, unsigned long long &key3) {
     if (des_mode == 1) {
         requestKey("64-bit password", key1);
     } else if (des_mode == 2 || des_mode == 3) {
@@ -22,7 +22,7 @@ void DESInputHandler::initializeDesKeys(uint64_t &key1, uint64_t &key2, uint64_t
     }
 }
 
-void DESInputHandler::requestKey(std::string keyMessage, uint64_t &key) {
+void DESInputHandler::requestKey(std::string keyMessage, unsigned long long &key) {
     printf(("Enter " + keyMessage + ": ").c_str());
     EnterPasswordHex(key);
     while(isWeakKey(key)){
@@ -31,7 +31,7 @@ void DESInputHandler::requestKey(std::string keyMessage, uint64_t &key) {
     }
 }
 
-bool DESInputHandler::isWeakKey(uint64_t key) {
+bool DESInputHandler::isWeakKey(unsigned long long key) {
 
     for (const auto& weakKey : weakKeys) {
         if (key == weakKey) {

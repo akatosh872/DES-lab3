@@ -20,13 +20,13 @@ void FileHandler::closeOutputFile() {
     fileOutput.close();
 }
 
-bool FileHandler::readChunk(uint8_t *buffer, size_t chunkSize, size_t& bytesRead) {
+bool FileHandler::readChunk(char unsigned *buffer, unsigned chunkSize, unsigned& bytesRead) {
     fileInput.read(reinterpret_cast<char *>(buffer), chunkSize);
     bytesRead = fileInput.gcount();
     return bytesRead > 0;
 }
 
-void FileHandler::writeChunk(const uint8_t *buffer, size_t chunkSize) {
+void FileHandler::writeChunk(const char unsigned *buffer, unsigned chunkSize) {
     fileOutput.write(reinterpret_cast<const char *>(buffer), chunkSize);
 }
 

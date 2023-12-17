@@ -40,7 +40,7 @@ inline void InputHandler::delChar()
     putchar(BACK_SPACE);
 }
 
-bool InputHandler::EnterPasswordHex(uint64_t &key) {
+bool InputHandler::EnterPasswordHex(unsigned long long &key) {
     unsigned EnteredAmount = 0;
     char *Password, CurrentChar;
 
@@ -67,7 +67,7 @@ bool InputHandler::EnterPasswordHex(uint64_t &key) {
     return true;
 }
 
-bool InputHandler::enterIVHex(uint64_t &iv) {
+bool InputHandler::enterIVHex(unsigned long long &iv) {
     const unsigned IVSize = 16;
     unsigned enteredAmount = 0;
     char *ivHexChars = new char[IVSize];

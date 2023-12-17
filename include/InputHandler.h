@@ -7,7 +7,7 @@
 #include <cstdio>
 #include <tchar.h>
 #include <conio.h>
-#include <cstdint>
+
 #include "DesEncryptor.h"
 
 
@@ -19,8 +19,8 @@ public:
     const char* getInputFileName() const;
     const char* getOutputFileName() const;
     inline void delChar();
-    bool EnterPasswordHex(uint64_t& key);
-    bool enterIVHex(uint64_t& iv);
+    bool EnterPasswordHex(unsigned long long& key);
+    bool enterIVHex(unsigned long long& iv);
 
     char crypt_mode{};
 private:

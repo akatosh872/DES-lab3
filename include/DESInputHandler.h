@@ -4,7 +4,7 @@
 
 #include "InputHandler.h"
 
-const uint64_t weakKeys[] = {
+const unsigned long long weakKeys[] = {
         0x0101010101010101,
         0xFEFEFEFEFEFEFEFE,
         0x1F1F1F1F0E0E0E0E,
@@ -26,9 +26,9 @@ const uint64_t weakKeys[] = {
 class DESInputHandler : public InputHandler {
 public:
     void setDesMode ();
-    void initializeDesKeys(uint64_t& key1, uint64_t& key2, uint64_t& key3);
-    void requestKey(std::string keyMessage, uint64_t &key);
-    bool isWeakKey(uint64_t key);
+    void initializeDesKeys(unsigned long long& key1, unsigned long long& key2, unsigned long long& key3);
+    void requestKey(std::string keyMessage, unsigned long long &key);
+    bool isWeakKey(unsigned long long key);
     bool getCrypt() const;
     DesMode getDES() const;
 private:

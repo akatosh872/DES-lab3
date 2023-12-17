@@ -2,7 +2,7 @@
 #define UNTITLED_DESENCRYPTOR_H
 
 
-#include "../include/DES.h"
+#include "DES.h"
 #include "FileHandler.h"
 
 enum DesMode {
@@ -15,9 +15,13 @@ class DesEncryptor
 {
 private:
     DES des;
+    unsigned long long DesKey1;
+    unsigned long long DesKey2;
+    unsigned long long DesKey3;
 
 public:
-    void encrypt(FileHandler &fh, bool mode, DesMode des_mode, uint64_t iv, uint64_t key1, uint64_t key2, uint64_t key3);
+    DesEncryptor(unsigned long long key1, unsigned long long key2, unsigned long long key3);
+    void encrypt(FileHandler &fh, bool mode, DesMode des_mode, unsigned long long iv);
 };
 
 #endif //UNTITLED_DESENCRYPTOR_H

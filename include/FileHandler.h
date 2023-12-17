@@ -1,7 +1,7 @@
 #ifndef UNTITLED_FILEHANDLER_H
 #define UNTITLED_FILEHANDLER_H
 
-#include <cstdint>
+
 #include <fstream>
 #include <iostream>
 
@@ -12,8 +12,8 @@ public:
     bool openOutputFile();
     void closeInputFile();
     void closeOutputFile();
-    bool readChunk(uint8_t* buffer, size_t chunkSize, size_t& bytesRead);
-    void writeChunk(const uint8_t* buffer, size_t chunkSize);
+    bool readChunk(char unsigned* buffer, unsigned chunkSize, unsigned& bytesRead);
+    void writeChunk(const char unsigned* buffer, unsigned chunkSize);
 
 private:
     const char* inputFileName;
