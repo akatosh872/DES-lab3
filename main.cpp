@@ -23,7 +23,6 @@ int main() {
     DesEncryptor des{key1, key2, key3};
 
     if (fh.openInputFile() && fh.openOutputFile()) {
-
         DWORD start_time = GetTickCount();
         des.encrypt(fh, crypt_mode, des_mode, iv);
         DWORD end_time = GetTickCount();
@@ -34,6 +33,6 @@ int main() {
         fh.closeInputFile();
         fh.closeOutputFile();
     }
-
+    system("pause");
     return 0;
 }

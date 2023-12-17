@@ -1,10 +1,10 @@
 #ifndef UNTITLED_DES_H
 #define UNTITLED_DES_H
 
-
 #include "MatrixConst.h"
 #include <iostream>
 
+const unsigned FILE_CHUNK_SIZE = 131072;
 #define LSHIFT_28BIT(x, L) ((((x) << (L)) | ((x) >> (-(L) & 27))) & (((unsigned long long)1 << 32) - 1));
 
 class DES {

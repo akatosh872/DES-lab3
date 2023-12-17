@@ -1,6 +1,5 @@
 #include "../include/DesEncryptor.h"
 
-const unsigned FILE_CHUNK_SIZE = 131072;
 
 DesEncryptor::DesEncryptor(unsigned long long int key1, unsigned long long int key2, unsigned long long int key3) {
     DesKey1 = key1;

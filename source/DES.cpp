@@ -1,6 +1,5 @@
 #include "../include/DES.h"
 
-const unsigned FILE_CHUNK_SIZE = 131072;
 
 void DES::des_encrypt_block(char unsigned *to, bool mode, unsigned length, char unsigned *from, unsigned long long key64b, unsigned long long iv = 0) {
     length = (length % 8 == 0 ? length : length + (8 - (length % 8)));
@@ -32,7 +31,7 @@ void DES::key_expansion(unsigned long long key64b, unsigned long long *keys48b) 
     key_expansion_to_48bits(K1, K2, keys48b);
 }
 
-unsigned long long DES::join_8bits_to_64bits(char unsigned *blocks8b) {
+inline unsigned long long DES::join_8bits_to_64bits(char unsigned *blocks8b) {
     unsigned long long block64b = 0;
     for (int i = 0; i < 8; ++i) {
         block64b = (block64b << 8) | blocks8b[i];
@@ -40,9 +39,6 @@ unsigned long long DES::join_8bits_to_64bits(char unsigned *blocks8b) {
     return block64b;
 }
 
-/**
-*    Розділяє ключ на 2 28 бітних частини, та виконує перестановку за таблицею __KP
-*/
 void DES::key_permutation_56bits_to_28bits(unsigned long long block56b, unsigned long *block28b_1, unsigned long *block28b_2) {
     for (char unsigned i = 0; i < 28; ++i) {
         *block28b_1 |= ((block56b >> (64 - __K1P[i])) & 0x01) << (31 - i);
@@ -50,9 +46,6 @@ void DES::key_permutation_56bits_to_28bits(unsigned long long block56b, unsigned
     }
 }
 
-/**
- *   Об'єднує 2 28 бітні частини в один 56-бітний блок
- */
 void DES::key_expansion_to_48bits(unsigned long block28b_1, unsigned long block28b_2, unsigned long long *keys48b) {
     unsigned long long block56b;
     char unsigned n;
@@ -78,19 +71,13 @@ void DES::key_expansion_to_48bits(unsigned long block28b_1, unsigned long block2
     }
 }
 
-/**
- *  Розширення 28-бітного числа до 56 біт
- */
-unsigned long long DES::join_28bits_to_56bits(unsigned long block28b_1, unsigned long block28b_2) {
+inline unsigned long long DES::join_28bits_to_56bits(unsigned long block28b_1, unsigned long block28b_2) {
     unsigned long long block56b;
     block56b = (block28b_1 >> 4);
     block56b = ((block56b << 32) | block28b_2) << 4;
     return block56b;
 }
 
-/**
- * Виконує перестановку скорочення ключів для отримання 48-бітного ключа з 56-бітного
-*/
 unsigned long long DES::key_contraction_permutation(unsigned long long block56b) {
     unsigned long long block48b = 0;
     for (char unsigned i = 0; i < 48; ++i) {
@@ -99,17 +86,11 @@ unsigned long long DES::key_contraction_permutation(unsigned long long block56b)
     return block48b;
 }
 
-/**
- *  Розділяє 64-бітне число на 2 32-бітні
- */
 void DES::split_64bits_to_32bits(unsigned long long block64b, unsigned long *block32b_1, unsigned long *block32b_2) {
     *block32b_1 = (unsigned long) (block64b >> 32);
     *block32b_2 = (unsigned long) (block64b);
 }
 
-/**
- *  Початкове кодування перед функцією
- */
 unsigned long long DES::initial_permutation(unsigned long long block64b) {
     unsigned long long new_block64b = 0;
     for (char unsigned i = 0; i < 64; ++i) {
@@ -117,10 +98,6 @@ unsigned long long DES::initial_permutation(unsigned long long block64b) {
     }
     return new_block64b;
 }
-
-/**
- *  Метод отримує режим (кодування або декодування), та 16 раундів повторює функцію
- */
 
 void DES::feistel_cipher(bool mode, unsigned long *N1, unsigned long *N2, unsigned long long *keys48b) {
     switch (mode) {
@@ -141,18 +118,12 @@ void DES::feistel_cipher(bool mode, unsigned long *N1, unsigned long *N2, unsign
     }
 }
 
-/**
- *  Метод викликає функцію кодування та змінює дві частини до наступного раунду
- */
 void DES::round_feistel_cipher(unsigned long *N1, unsigned long *N2, unsigned long long key48b) {
     unsigned long temp = *N2;
     *N2 = func_F(*N2, key48b) ^ *N1;
     *N1 = temp;
 }
 
-/**
- *  Головна функція F в алгоритмі DES.
- */
 unsigned long DES::func_F(unsigned long block32b, unsigned long long key48b) {
     unsigned long long block48b = expansion_permutation(block32b);
     block48b ^= key48b;
@@ -160,9 +131,6 @@ unsigned long DES::func_F(unsigned long block32b, unsigned long long key48b) {
     return permutation(block32b);
 }
 
-/**
- *  Розширення 32-біт до 48-біт
- */
 unsigned long long DES::expansion_permutation(unsigned long block32b) {
     unsigned long long block48b = 0;
     for (char unsigned i = 0; i < 48; ++i) {
@@ -171,9 +139,6 @@ unsigned long long DES::expansion_permutation(unsigned long block32b) {
     return block48b;
 }
 
-/**
- *  Розподіл 48-біт на 8 частин по 6-біт
- */
 unsigned long DES::substitutions(unsigned long long block48b) {
     char unsigned blocks4b[4], blocks6b[8] = {0};
     split_48bits_to_6bits(block48b, blocks6b);
@@ -181,9 +146,6 @@ unsigned long DES::substitutions(unsigned long long block48b) {
     return join_4bits_to_32bits(blocks4b);
 }
 
-/**
- *  Виконує остаточну перестановку на 32-бітному блоці
- */
 unsigned long DES::permutation(unsigned long block32b) {
     unsigned long new_block32b = 0;
     for (char unsigned i = 0; i < 32; ++i) {
@@ -192,18 +154,12 @@ unsigned long DES::permutation(unsigned long block32b) {
     return new_block32b;
 }
 
-/**
- *  Розподіл 48-біт на 8 частин по 6-біт
- */
 void DES::split_48bits_to_6bits(unsigned long long block48b, char unsigned *blocks6b) {
     for (char unsigned i = 0; i < 8; ++i) {
         blocks6b[i] = (block48b >> (58 - (i * 6))) << 2;
     }
 }
 
-/**
- *  Переставляє 6-бітні блоки в 4-бітні блоки за допомогою таблиць підстановки.
- */
 void DES::substitution_6bits_to_4bits(char unsigned *blocks6b, char unsigned *blocks4b) {
     char unsigned block2b, block4b;
 
@@ -218,9 +174,6 @@ void DES::substitution_6bits_to_4bits(char unsigned *blocks6b, char unsigned *bl
     }
 }
 
-/**
- *  Об'єднання 4-бітних блоків до одного 32-бітного
- */
 unsigned long DES::join_4bits_to_32bits(char unsigned *blocks4b) {
     unsigned long block32b;
     for (char unsigned *p = blocks4b; p < blocks4b + 4; ++p) {
@@ -229,32 +182,20 @@ unsigned long DES::join_4bits_to_32bits(char unsigned *blocks4b) {
     return block32b;
 }
 
-/**
- * Виділяє старші біти з 6-бітного блоку
- */
 char unsigned DES::extreme_bits(char unsigned block6b) {
     return ((block6b >> 6) & 0x2) | ((block6b >> 2) & 0x1);
 }
 
-/**
- * Виділяє середні біти з 6-бітного блоку.
- */
 char unsigned DES::middle_bits(char unsigned block6b) {
     return (block6b >> 3) & 0xF;
 }
 
-/**
- *  Розділ 64-бітного блоку до 8-бітних
- */
 void DES::split_64bits_to_8bits(unsigned long long block64b, char unsigned *blocks8b) {
     for (unsigned i = 0; i < 8; ++i) {
         blocks8b[i] = (char unsigned) (block64b >> ((7 - i) * 8));
     }
 }
 
-/**
- *  Кінцева перестановка
- */
 unsigned long long DES::final_permutation(unsigned long long block64b) {
     unsigned long long new_block64b = 0;
     for (char unsigned i = 0; i < 64; ++i) {
@@ -263,10 +204,7 @@ unsigned long long DES::final_permutation(unsigned long long block64b) {
     return new_block64b;
 }
 
-/**
- *  Об'єднання 32-бітних частин до 64-бітної
- */
-unsigned long long DES::join_32bits_to_64bits(unsigned long block32b_1, unsigned long block32b_2) {
+inline unsigned long long DES::join_32bits_to_64bits(unsigned long block32b_1, unsigned long block32b_2) {
     unsigned long long block64b;
     block64b = (unsigned long long) block32b_1;
     block64b = (unsigned long long) (block64b << 32) | block32b_2;

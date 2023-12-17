@@ -15,3 +15,4 @@ add_executable(untitled main.cpp
         include/DesEncryptor.h
         source/DESInputHandler.cpp
         include/DESInputHandler.h)
+target_compile_options(untitled PRIVATE -O3 -march=native -funroll-loops -mtune=native -finline-functions)
