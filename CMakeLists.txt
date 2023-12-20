@@ -3,7 +3,10 @@ project(untitled)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(untitled main.cpp
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -mtune=native")
+
+add_executable(untitled
+        main.cpp
         source/DES.cpp
         include/DES.h
         include/MatrixConst.h
@@ -14,5 +17,7 @@ add_executable(untitled main.cpp
         source/DesEncryptor.cpp
         include/DesEncryptor.h
         source/DESInputHandler.cpp
-        include/DESInputHandler.h)
-target_compile_options(untitled PRIVATE -O3 -march=native -funroll-loops -mtune=native -finline-functions)
+        include/DESInputHandler.h
+)
+
+target_compile_options(untitled PRIVATE -O3 -funroll-loops -finline-functions)

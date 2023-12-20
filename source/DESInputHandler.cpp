@@ -1,13 +1,15 @@
 #include "../include/DESInputHandler.h"
 
-void DESInputHandler::setDesMode()
-{
-    char buffer[256];
+void DESInputHandler::setDesMode() {
+    printf("Select DES crypt mode: (1) DES, (2) 3DES-EEE3, (3) 3DES-EDE3: ");
     do {
-        printf("Select DES crypt mode: (1) DES, (2) 3DES-EEE3, (3) 3DES-EDE3: ");
-        fgets(buffer, sizeof(buffer), stdin);
-        sscanf(buffer, "%d", &des_mode);
-    } while (des_mode < 1 || des_mode > 3);
+        des_mode = _getch();
+        if (des_mode >= '1' && des_mode <= '3') {
+            putchar(des_mode);
+            putchar('\n');
+            des_mode -= '0';
+        }
+    } while (!(des_mode >= 1 && des_mode <= 3));
 }
 
 void DESInputHandler::initializeDesKeys(unsigned long long &key1, unsigned long long &key2, unsigned long long &key3) {
@@ -25,7 +27,7 @@ void DESInputHandler::initializeDesKeys(unsigned long long &key1, unsigned long 
 void DESInputHandler::requestKey(std::string keyMessage, unsigned long long &key) {
     printf(("Enter " + keyMessage + ": ").c_str());
     EnterPasswordHex(key);
-    while(isWeakKey(key)){
+    while (isWeakKey(key)) {
         printf(("Invalid " + keyMessage + ", it's a weak key. Enter again: ").c_str());
         EnterPasswordHex(key);
     }
@@ -33,7 +35,7 @@ void DESInputHandler::requestKey(std::string keyMessage, unsigned long long &key
 
 bool DESInputHandler::isWeakKey(unsigned long long key) {
 
-    for (const auto& weakKey : weakKeys) {
+    for (const auto &weakKey: weakKeys) {
         if (key == weakKey) {
             std::cout << "Weak key detected" << std::endl;
             return true;

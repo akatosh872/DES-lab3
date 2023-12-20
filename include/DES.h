@@ -11,13 +11,7 @@ class DES {
 public:
     DES() = default;
 
-    void des_encrypt_block(char unsigned *to, bool mode, unsigned length, char unsigned *from, unsigned long long key64b, unsigned long long iv);
-    void key_expansion(unsigned long long key64b, unsigned long long *keys48b);
-    unsigned long long join_8bits_to_64bits(char unsigned *blocks8b);
-    void key_permutation_56bits_to_28bits(unsigned long long block56b, unsigned long *block28b_1, unsigned long *block28b_2);
-    void key_expansion_to_48bits(unsigned long block28b_1, unsigned long block28b_2, unsigned long long *keys48b);
-    unsigned long long join_28bits_to_56bits(unsigned long block28b_1, unsigned long block28b_2);
-    unsigned long long key_contraction_permutation(unsigned long long block56b);
+    void des_encrypt_block(char unsigned *to, bool mode, unsigned length, char unsigned *from, unsigned long long *key64b, unsigned long long iv);
     void split_64bits_to_32bits(unsigned long long block64b, unsigned long *block32b_1, unsigned long *block32b_2);
     unsigned long long initial_permutation(unsigned long long block64b);
     void feistel_cipher(bool mode, unsigned long *N1, unsigned long *N2, unsigned long long *keys48b);

@@ -13,18 +13,18 @@ InputHandler::InputHandler() {
     GetSaveFileName(&out_file);
 }
 
-void InputHandler::setCryptMode()
-{
-    char buffer[256];
+void InputHandler::setCryptMode() {
+    printf("Enter mode (E/D): ");
     do {
-        printf("Enter mode (E/D): ");
-        fgets(buffer, sizeof(buffer), stdin);
-        crypt_mode = buffer[0];
-        crypt_mode = toupper(crypt_mode);
+        crypt_mode = toupper(_getch());
+        if (crypt_mode == 'E' || crypt_mode == 'D') {
+            putchar(crypt_mode);
+            putchar('\n');
+        }
     } while (!(crypt_mode == 'E' || crypt_mode == 'D'));
 }
 
-void InputHandler::initializeFileSelection(OPENFILENAME& file, const char* filter, char* fileName) {
+void InputHandler::initializeFileSelection(OPENFILENAME &file, const char *filter, char *fileName) {
     file.lStructSize = sizeof(file);
     file.hwndOwner = GetConsoleWindow();
     file.lpstrFilter = filter;
@@ -33,8 +33,7 @@ void InputHandler::initializeFileSelection(OPENFILENAME& file, const char* filte
     file.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
 }
 
-inline void InputHandler::delChar()
-{
+inline void InputHandler::delChar() {
     putchar(BACK_SPACE);
     putchar(' ');
     putchar(BACK_SPACE);
@@ -90,7 +89,7 @@ bool InputHandler::enterIVHex(unsigned long long &iv) {
     } while (!((enteredAmount == 16 || enteredAmount == 0) && currentChar == ENTER));
     putchar('\n');
 
-    if(enteredAmount == 0) { // no iv entered
+    if (enteredAmount == 0) { // no iv entered
         delete[] ivHexChars;
         return false;
     }
