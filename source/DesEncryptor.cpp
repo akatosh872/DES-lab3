@@ -11,30 +11,23 @@ void DesEncryptor::encrypt(FileHandler &fh, bool mode, DesMode des_mode, unsigne
 {
     char unsigned buffer[FILE_CHUNK_SIZE];
     char unsigned crypted[FILE_CHUNK_SIZE];
-    unsigned long long keys1b[16] = {0};
-    unsigned long long keys2b[16] = {0};
-    unsigned long long keys3b[16] = {0};
+    unsigned long long keys[3][16] = {0};
     unsigned bytesRead;
 
-    key_expansion(DesKey1, keys1b);
-    key_expansion(DesKey2, keys2b);
-    key_expansion(DesKey3, keys3b);
+    key_expansion(DesKey1, keys[0]);
+    key_expansion(DesKey2, keys[1]);
+    key_expansion(DesKey3, keys[2]);
 
     while (fh.readChunk(buffer, FILE_CHUNK_SIZE, bytesRead))
     {
-        des.des_encrypt_block(crypted, mode, bytesRead, buffer, keys1b, iv);
-        switch(des_mode)
-        {
-            case DES_ONE:
-                break;
-            case DES_EEE:
-                des.des_encrypt_block(crypted, mode, bytesRead, crypted, keys2b, iv);
-                des.des_encrypt_block(crypted, mode, bytesRead, crypted, keys3b, iv);
-                break;
-            case DES_EDE:
-                des.des_encrypt_block(crypted, !mode, bytesRead, crypted, keys2b, iv);
-                des.des_encrypt_block(crypted, mode, bytesRead, crypted, keys3b, iv);
-                break;
+        des.des_encrypt_block(crypted, mode, bytesRead, buffer, keys[0], iv);
+        iv = *(unsigned long long*)crypted;
+        if (des_mode != DES_ONE) {
+            bool mode2 = (des_mode == DES_EEE) ? mode : !mode;
+            des.des_encrypt_block(crypted, mode2, bytesRead, crypted, keys[1], iv);
+            iv = *(unsigned long long*)crypted;
+            des.des_encrypt_block(crypted, mode, bytesRead, crypted, keys[2], iv);
+            iv = *(unsigned long long*)crypted;
         }
         fh.writeChunk(crypted, bytesRead);
     }

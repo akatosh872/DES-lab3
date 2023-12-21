@@ -10,16 +10,25 @@ void DES::des_encrypt_block(char unsigned *to, bool mode, unsigned length, char 
             block64b |= static_cast<unsigned long long>(from[i + j]) << ((7 - j) * 8);
         }
 
-        if (iv != 0) {
-            block64b ^= previous_block;
+        if (mode && (iv != 0)) {
+                block64b ^= previous_block;
         }
 
         unsigned long N1, N2;
         split_64bits_to_32bits(initial_permutation(block64b), &N1, &N2);
         feistel_cipher(mode, &N1, &N2, keys48b);
-        previous_block = final_permutation(join_32bits_to_64bits(N2, N1));
+        unsigned long long processed_block = final_permutation(join_32bits_to_64bits(N2, N1));
 
-        split_64bits_to_8bits(previous_block, to + i);
+        if (!mode) {
+            if (iv != 0) {
+                processed_block ^= previous_block;
+            }
+            previous_block = block64b;
+        } else {
+            previous_block = processed_block;
+        }
+
+        split_64bits_to_8bits(processed_block, to + i);
     }
 }
 
