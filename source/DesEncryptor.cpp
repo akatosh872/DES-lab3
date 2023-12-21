@@ -21,13 +21,10 @@ void DesEncryptor::encrypt(FileHandler &fh, bool mode, DesMode des_mode, unsigne
     while (fh.readChunk(buffer, FILE_CHUNK_SIZE, bytesRead))
     {
         des.des_encrypt_block(crypted, mode, bytesRead, buffer, keys[0], iv);
-        iv = *(unsigned long long*)crypted;
         if (des_mode != DES_ONE) {
             bool mode2 = (des_mode == DES_EEE) ? mode : !mode;
             des.des_encrypt_block(crypted, mode2, bytesRead, crypted, keys[1], iv);
-            iv = *(unsigned long long*)crypted;
             des.des_encrypt_block(crypted, mode, bytesRead, crypted, keys[2], iv);
-            iv = *(unsigned long long*)crypted;
         }
         fh.writeChunk(crypted, bytesRead);
     }
