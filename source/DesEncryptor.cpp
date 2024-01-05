@@ -20,13 +20,74 @@ void DesEncryptor::encrypt(FileHandler &fh, bool mode, DesMode des_mode, unsigne
 
     while (fh.readChunk(buffer, FILE_CHUNK_SIZE, bytesRead))
     {
-        des.des_encrypt_block(crypted, mode, bytesRead, buffer, keys[0], iv);
-        if (des_mode != DES_ONE) {
-            bool mode2 = (des_mode == DES_EEE) ? mode : !mode;
-            des.des_encrypt_block(crypted, mode2, bytesRead, crypted, keys[1], iv);
-            des.des_encrypt_block(crypted, mode, bytesRead, crypted, keys[2], iv);
+        // Добавление нулей, если размер блока не кратен 8
+        unsigned padding = 8 - (bytesRead % 8);
+        if (padding < 8) {
+            for (unsigned i = 0; i < padding; i++) {
+                buffer[bytesRead + i] = 0;
+            }
+            bytesRead += padding;
+        }
+
+        for (unsigned i = 0; i < bytesRead; i += 8) {
+            unsigned long long block = *reinterpret_cast<unsigned long long*>(buffer + i);
+            if (mode && (iv != 0)) {
+                block ^= iv;
+            }
+            if (des_mode == DES_ONE) {
+                des.des_encrypt_block(crypted + i, mode, 8, reinterpret_cast<char unsigned*>(&block), keys[0]);
+                if (mode && (iv != 0)) {
+                    iv = *reinterpret_cast<unsigned long long*>(crypted + i);
+                }
+            } else {
+                bool mode2 = (des_mode == DES_EEE) ? mode : !mode;
+                des.des_encrypt_block(crypted + i, mode, 8, reinterpret_cast<char unsigned*>(&block), keys[0]);
+                des.des_encrypt_block(crypted + i, mode2, 8, crypted + i, keys[1]);
+                des.des_encrypt_block(crypted + i, mode, 8, crypted + i, keys[2]);
+                if (mode && (iv != 0)) {
+                    iv = *reinterpret_cast<unsigned long long*>(crypted + i);
+                }
+            }
         }
         fh.writeChunk(crypted, bytesRead);
+    }
+}
+
+void DesEncryptor::decrypt(FileHandler &fh, bool mode, DesMode des_mode, unsigned long long iv)
+{
+    char unsigned buffer[FILE_CHUNK_SIZE];
+    char unsigned decrypted[FILE_CHUNK_SIZE];
+    unsigned long long keys[3][16] = {0};
+    unsigned bytesRead;
+
+    key_expansion(DesKey1, keys[0]);
+    key_expansion(DesKey2, keys[1]);
+    key_expansion(DesKey3, keys[2]);
+
+    while (fh.readChunk(buffer, FILE_CHUNK_SIZE, bytesRead))
+    {
+        for (unsigned i = 0; i < bytesRead; i += 8) {
+            unsigned long long block = *reinterpret_cast<unsigned long long*>(buffer + i);
+            if (des_mode == DES_ONE) {
+                des.des_encrypt_block(decrypted + i, mode, 8, reinterpret_cast<char unsigned*>(&block), keys[0]);
+                if (!mode && (iv != 0)) {
+                    unsigned long long *decrypted_block = reinterpret_cast<unsigned long long*>(decrypted + i);
+                    *decrypted_block ^= iv;
+                    iv = block;
+                }
+            } else {
+                bool mode2 = (des_mode == DES_EEE) ? mode : !mode;
+                des.des_encrypt_block(decrypted + i, mode, 8, reinterpret_cast<char unsigned*>(&block), keys[2]);
+                des.des_encrypt_block(decrypted + i, mode2, 8, decrypted + i, keys[1]);
+                des.des_encrypt_block(decrypted + i, mode, 8, decrypted + i, keys[0]);
+                if (!mode && (iv != 0)) {
+                    unsigned long long *decrypted_block = reinterpret_cast<unsigned long long*>(decrypted + i);
+                    *decrypted_block ^= iv;
+                    iv = block;
+                }
+            }
+        }
+        fh.writeChunk(decrypted, bytesRead);
     }
 }
 

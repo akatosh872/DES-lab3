@@ -24,7 +24,7 @@ int main() {
 
     if (fh.openInputFile() && fh.openOutputFile()) {
         DWORD start_time = GetTickCount();
-        des.encrypt(fh, crypt_mode, des_mode, iv);
+        crypt_mode ? des.encrypt(fh, crypt_mode, des_mode, iv) : des.decrypt(fh, crypt_mode, des_mode, iv);
         DWORD end_time = GetTickCount();
 
         DWORD elapsed_time = end_time - start_time;

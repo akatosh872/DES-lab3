@@ -11,7 +11,7 @@ class DES {
 public:
     DES() = default;
 
-    void des_encrypt_block(char unsigned *to, bool mode, unsigned length, char unsigned *from, unsigned long long *key64b, unsigned long long iv);
+    void des_encrypt_block(char unsigned *to, bool mode, unsigned length, char unsigned *from, unsigned long long *key64b);
     void split_64bits_to_32bits(unsigned long long block64b, unsigned long *block32b_1, unsigned long *block32b_2);
     unsigned long long initial_permutation(unsigned long long block64b);
     void feistel_cipher(bool mode, unsigned long *N1, unsigned long *N2, unsigned long long *keys48b);
