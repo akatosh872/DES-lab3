@@ -1,5 +1,6 @@
 #include "../include/DesEncryptor.h"
-
+#pragma GCC optimize ("unroll-loops")
+#pragma once
 
 DesEncryptor::DesEncryptor(unsigned long long int key1, unsigned long long int key2, unsigned long long int key3) {
     DesKey1 = key1;
@@ -35,15 +36,15 @@ void DesEncryptor::encrypt(FileHandler &fh, bool mode, DesMode des_mode, unsigne
                 block ^= iv;
             }
             if (des_mode == DES_ONE) {
-                des.des_encrypt_block(crypted + i, mode, 8, reinterpret_cast<char unsigned*>(&block), keys[0]);
+                des.des_encrypt_block(crypted + i, mode, reinterpret_cast<char unsigned*>(&block), keys[0]);
                 if (mode && (iv != 0)) {
                     iv = *reinterpret_cast<unsigned long long*>(crypted + i);
                 }
             } else {
                 bool mode2 = (des_mode == DES_EEE) ? mode : !mode;
-                des.des_encrypt_block(crypted + i, mode, 8, reinterpret_cast<char unsigned*>(&block), keys[0]);
-                des.des_encrypt_block(crypted + i, mode2, 8, crypted + i, keys[1]);
-                des.des_encrypt_block(crypted + i, mode, 8, crypted + i, keys[2]);
+                des.des_encrypt_block(crypted + i, mode, reinterpret_cast<char unsigned*>(&block), keys[0]);
+                des.des_encrypt_block(crypted + i, mode2, crypted + i, keys[1]);
+                des.des_encrypt_block(crypted + i, mode, crypted + i, keys[2]);
                 if (mode && (iv != 0)) {
                     iv = *reinterpret_cast<unsigned long long*>(crypted + i);
                 }
@@ -69,7 +70,8 @@ void DesEncryptor::decrypt(FileHandler &fh, bool mode, DesMode des_mode, unsigne
         for (unsigned i = 0; i < bytesRead; i += 8) {
             unsigned long long block = *reinterpret_cast<unsigned long long*>(buffer + i);
             if (des_mode == DES_ONE) {
-                des.des_encrypt_block(decrypted + i, mode, 8, reinterpret_cast<char unsigned*>(&block), keys[0]);
+                des.des_encrypt_block(decrypted + i, mode, reinterpret_cast<char unsigned*>(&block), keys[0]);
+
                 if (!mode && (iv != 0)) {
                     unsigned long long *decrypted_block = reinterpret_cast<unsigned long long*>(decrypted + i);
                     *decrypted_block ^= iv;
@@ -77,9 +79,9 @@ void DesEncryptor::decrypt(FileHandler &fh, bool mode, DesMode des_mode, unsigne
                 }
             } else {
                 bool mode2 = (des_mode == DES_EEE) ? mode : !mode;
-                des.des_encrypt_block(decrypted + i, mode, 8, reinterpret_cast<char unsigned*>(&block), keys[2]);
-                des.des_encrypt_block(decrypted + i, mode2, 8, decrypted + i, keys[1]);
-                des.des_encrypt_block(decrypted + i, mode, 8, decrypted + i, keys[0]);
+                des.des_encrypt_block(decrypted + i, mode, reinterpret_cast<char unsigned*>(&block), keys[2]);
+                des.des_encrypt_block(decrypted + i, mode2, decrypted + i, keys[1]);
+                des.des_encrypt_block(decrypted + i, mode, decrypted + i, keys[0]);
                 if (!mode && (iv != 0)) {
                     unsigned long long *decrypted_block = reinterpret_cast<unsigned long long*>(decrypted + i);
                     *decrypted_block ^= iv;

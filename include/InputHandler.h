@@ -1,6 +1,7 @@
 #ifndef UNTITLED_INPUTHANDLER_H
 #define UNTITLED_INPUTHANDLER_H
 
+#pragma once
 #include <windows.h>
 #include <commdlg.h>
 #include <iostream>

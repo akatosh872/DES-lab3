@@ -1,6 +1,7 @@
 #ifndef UNTITLED_DES_H
 #define UNTITLED_DES_H
 
+#pragma once
 #include "MatrixConst.h"
 #include <iostream>
 
@@ -11,8 +12,7 @@ class DES {
 public:
     DES() = default;
 
-    void des_encrypt_block(char unsigned *to, bool mode, unsigned length, char unsigned *from, unsigned long long *key64b);
-    void split_64bits_to_32bits(unsigned long long block64b, unsigned long *block32b_1, unsigned long *block32b_2);
+    void des_encrypt_block(char unsigned *to, bool mode, char unsigned *from, unsigned long long *key64b);
     unsigned long long initial_permutation(unsigned long long block64b);
     void feistel_cipher(bool mode, unsigned long *N1, unsigned long *N2, unsigned long long *keys48b);
     void round_feistel_cipher(unsigned long *N1, unsigned long *N2, unsigned long long key48b);
@@ -25,9 +25,7 @@ public:
     unsigned long join_4bits_to_32bits(char unsigned *blocks4b);
     char unsigned extreme_bits(char unsigned block6b);
     char unsigned middle_bits(char unsigned block6b);
-    void split_64bits_to_8bits(unsigned long long block64b, char unsigned *blocks8b);
     unsigned long long final_permutation(unsigned long long block64b);
-    unsigned long long join_32bits_to_64bits(unsigned long block32b_1, unsigned long block32b_2);
 };
 
 #endif //UNTITLED_DES_H

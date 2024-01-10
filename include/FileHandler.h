@@ -1,7 +1,7 @@
 #ifndef UNTITLED_FILEHANDLER_H
 #define UNTITLED_FILEHANDLER_H
 
-
+#pragma once
 #include <fstream>
 #include <iostream>
 #include "windows.h"

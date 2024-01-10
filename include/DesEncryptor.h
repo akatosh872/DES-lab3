@@ -1,7 +1,7 @@
 #ifndef UNTITLED_DESENCRYPTOR_H
 #define UNTITLED_DESENCRYPTOR_H
 
-
+#pragma once
 #include "DES.h"
 #include "FileHandler.h"
 

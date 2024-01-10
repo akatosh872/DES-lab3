@@ -1,7 +1,7 @@
 #ifndef UNTITLED_DESINPUTHANDLER_H
 #define UNTITLED_DESINPUTHANDLER_H
 
-
+#pragma once
 #include "InputHandler.h"
 
 const unsigned long long weakKeys[] = {
